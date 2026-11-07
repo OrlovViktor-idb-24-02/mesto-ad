@@ -1,198 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Mesto</title>
-    <link rel="stylesheet" href="./src/pages/index.css" />
-  </head>
-  <body class="page">
-    <div class="page__content">
-      <header class="header page__section">
-        <img
-          src="./src/images/logo.svg"
-          alt="Логотип проекта место"
-          class="logo header__logo"
-        />
-      </header>
-      <main class="content">
-        <section class="profile page__section">
-          <div
-            class="profile__image"
-            style="background-image: url('./src/images/avatar.jpg')"
-          ></div>
-          <div class="profile__info">
-            <h1 class="profile__title">Жак-Ив Кусто</h1>
-            <button class="profile__edit-button" type="button"></button>
-            <p class="profile__description">Исследователь океана</p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mesto — делитесь фотографиями любимых мест.">
+  <meta name="theme-color" content="#000000">
+  <title>Mesto</title>
+</head>
+<body class="page">
+  <div class="page__content">
+    <header class="header">
+      <a class="header__logo" href="./" aria-label="Mesto, главная">Mesto<sup>Russia</sup></a>
+    </header>
+    <main class="content">
+      <section class="profile" aria-label="Профиль">
+        <button class="profile__avatar-button" type="button" aria-label="Обновить аватар" disabled>
+          <img class="profile__avatar" alt="Аватар пользователя" hidden>
+          <svg class="profile__avatar-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m4 16-1 5 5-1L21 7l-4-4L4 16Z" fill="currentColor"/></svg>
+        </button>
+        <div class="profile__info">
+          <div class="profile__heading">
+            <h1 class="profile__title"></h1>
+            <button class="profile__edit-button" type="button" aria-label="Редактировать профиль" disabled>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 16-1 5 5-1L21 7l-4-4L4 16Z" fill="currentColor"/></svg>
+            </button>
           </div>
-          <button class="profile__add-button" type="button"></button>
-        </section>
-        <section class="places page__section">
-          <ul class="places__list"></ul>
-        </section>
-      </main>
-      <footer class="footer page__section">
-        <p class="footer__copyright">© 2025 Mesto Russia</p>
-      </footer>
-
-      <div class="popup popup_type_edit">
-        <div class="popup__content">
-          <button type="button" class="popup__close"></button>
-          <h3 class="popup__title">Редактировать профиль</h3>
-          <form class="popup__form" name="edit-profile">
-            <label class="popup__label">
-              <input
-                type="text"
-                name="user-name"
-                id="user-name"
-                class="popup__input popup__input_type_name"
-                placeholder="Имя"
-              />
-            </label>
-            <label class="popup__label">
-              <input
-                type="text"
-                name="user-description"
-                id="user-description"
-                class="popup__input popup__input_type_description"
-                placeholder="Занятие"
-              />
-            </label>
-            <button
-              type="submit"
-              class="button popup__button"
-            >
-              Сохранить
-            </button>
-          </form>
+          <p class="profile__description"></p>
         </div>
-      </div>
+        <button class="profile__add-button" type="button" aria-label="Добавить карточку" disabled><span aria-hidden="true">+</span></button>
+      </section>
+      <p class="page__status" role="status" aria-live="polite">Загрузка...</p>
+      <button class="page__retry" type="button" hidden>Попробовать ещё раз</button>
+      <button class="page__retry page__connect" type="button" hidden>Подключить Mesto</button>
+      <section class="places" aria-label="Фотографии мест"><ul class="places__list"></ul></section>
+    </main>
+    <footer class="footer"><p class="footer__copyright">© 2026 Mesto Russia</p></footer>
+  </div>
 
-      <div class="popup popup_type_new-card">
-        <div class="popup__content">
-          <button type="button" class="popup__close"></button>
-          <h3 class="popup__title">Новое место</h3>
-          <form class="popup__form" name="new-place">
-            <label class="popup__label">
-              <input
-                type="text"
-                name="place-name"
-                id="place-name"
-                class="popup__input popup__input_type_card-name"
-                placeholder="Название"
-              />
-            </label>
-            <label class="popup__label">
-              <input
-                type="url"
-                name="place-link"
-                id="place-link"
-                class="popup__input popup__input_type_url"
-                placeholder="Ссылка на картинку"
-              />
-            </label>
-            <button
-              type="submit"
-              class="button popup__button"
-            >
-              Создать
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <div class="popup popup_type_image">
-        <div class="popup__content popup__content_content_image">
-          <button type="button" class="popup__close"></button>
-          <img src="" alt="" class="popup__image" />
-          <p class="popup__caption"></p>
-        </div>
-      </div>
-
-<!--      <div class="popup popup_type_remove-card">-->
-<!--        <div class="popup__content">-->
-<!--          <button type="button" class="popup__close"></button>-->
-<!--          <h3 class="popup__title">Вы уверены?</h3>-->
-<!--          <form class="popup__form" name="remove-card" novalidate>-->
-<!--            <button-->
-<!--              type="submit"-->
-<!--              class="button popup__button"-->
-<!--            >-->
-<!--              Да-->
-<!--            </button>-->
-<!--          </form>-->
-<!--        </div>-->
-<!--      </div>-->
-
-      <div class="popup popup_type_edit-avatar">
-        <div class="popup__content">
-          <button type="button" class="popup__close"></button>
-          <h3 class="popup__title">Обновить аватар</h3>
-          <form class="popup__form" name="edit-avatar">
-            <label class="popup__label">
-              <input
-                type="url"
-                name="user-avatar"
-                id="user-avatar"
-                class="popup__input popup__input_type_avatar"
-                placeholder="Ссылка на изображение"
-              />
-            </label>
-            <button
-              type="submit"
-              class="button popup__button"
-            >
-              Сохранить
-            </button>
-          </form>
-        </div>
-      </div>
-
-<!--      <div class="popup popup_type_info">-->
-<!--        <div class="popup__content popup__content_content_info">-->
-<!--          <button type="button" class="popup__close"></button>-->
-<!--          <h3 class="popup__title"></h3>-->
-<!--          <dl class="popup__info"></dl>-->
-
-<!--          <h4 class="popup__text"></h4>-->
-<!--          <ul class="popup__list"></ul>-->
-<!--        </div>-->
-<!--      </div>-->
+  <div class="popup popup_type_connection" aria-hidden="true">
+    <div class="popup__content" role="dialog" aria-modal="true" aria-labelledby="connection-title" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <h2 class="popup__title" id="connection-title">Подключить Mesto</h2>
+      <form class="popup__form" name="connection" novalidate>
+        <label class="popup__field"><span class="visually-hidden">Группа</span><input class="popup__input" id="connection-cohort" name="cohort" type="text" placeholder="Идентификатор группы" required pattern="[A-Za-z0-9_-]+" autocomplete="off"><span class="popup__input-error" id="connection-cohort-error" aria-live="polite"></span></label>
+        <label class="popup__field"><span class="visually-hidden">Токен Mesto</span><input class="popup__input" id="connection-token" name="token" type="password" placeholder="Токен Mesto из письма" required autocomplete="off"><span class="popup__input-error" id="connection-token-error" aria-live="polite"></span></label>
+        <p class="popup__connection-note">Данные используются для подключения к учебному серверу и сохраняются только в текущей вкладке.</p>
+        <p class="popup__error" role="alert"></p>
+        <button class="popup__button popup__button_disabled" type="submit" disabled>Подключить</button>
+      </form>
     </div>
+  </div>
 
-    <script src="./src/scripts/index.js" defer type="module"></script>
+  <div class="popup popup_type_edit" aria-hidden="true">
+    <div class="popup__content" role="dialog" aria-modal="true" aria-labelledby="edit-title" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <h2 class="popup__title" id="edit-title">Редактировать профиль</h2>
+      <form class="popup__form" name="edit-profile" data-require-changes="true" novalidate>
+        <label class="popup__field"><span class="visually-hidden">Имя</span><input class="popup__input popup__input_type_name" id="profile-name" pattern="[A-Za-zА-Яа-яЁё \-]+" data-error-message="Разрешены только латинские и кириллические буквы, пробелы и дефисы." name="name" type="text" placeholder="Имя" required minlength="2" maxlength="40" autocomplete="name"><span class="popup__input-error" id="profile-name-error" aria-live="polite"></span></label>
+        <label class="popup__field"><span class="visually-hidden">О себе</span><input class="popup__input popup__input_type_description" id="profile-about" name="about" type="text" placeholder="О себе" required minlength="2" maxlength="200"><span class="popup__input-error" id="profile-about-error" aria-live="polite"></span></label>
+        <p class="popup__error" role="alert"></p>
+        <button class="popup__button popup__button_disabled" type="submit" disabled>Сохранить</button>
+      </form>
+    </div>
+  </div>
 
-    <template id="card-template">
-      <li class="places__item card">
-        <img class="card__image" src="" alt="" />
-        <div class="card__control">
-          <!--<button type="button" class="card__control-button card__control-button_type_info"></button>-->
-          <button type="button" class="card__control-button card__control-button_type_delete"></button>
-        </div>
-        <div class="card__description">
-          <h2 class="card__title"></h2>
-          <div class="card__likes">
-            <button type="button" class="card__like-button"></button>
-            <!--<p class="card__like-count"></p>-->
-          </div>
-        </div>
-      </li>
-    </template>
+  <div class="popup popup_type_new-card" aria-hidden="true">
+    <div class="popup__content" role="dialog" aria-modal="true" aria-labelledby="new-title" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <h2 class="popup__title" id="new-title">Новое место</h2>
+      <form class="popup__form" name="new-place" novalidate>
+        <label class="popup__field"><span class="visually-hidden">Название</span><input class="popup__input popup__input_type_card-name" id="card-name" pattern="[A-Za-zА-Яа-яЁё \-]+" data-error-message="Разрешены только латинские и кириллические буквы, пробелы и дефисы." name="name" type="text" placeholder="Название" required minlength="2" maxlength="30"><span class="popup__input-error" id="card-name-error" aria-live="polite"></span></label>
+        <label class="popup__field"><span class="visually-hidden">Ссылка на картинку</span><input class="popup__input popup__input_type_url" id="card-link" name="link" type="url" placeholder="Ссылка на картинку" required><span class="popup__input-error" id="card-link-error" aria-live="polite"></span></label>
+        <p class="popup__error" role="alert"></p>
+        <button class="popup__button popup__button_disabled" type="submit" disabled>Создать</button>
+      </form>
+    </div>
+  </div>
 
-<!--    <template id="popup-info-definition-template">-->
-<!--      <div class="popup__info-item">-->
-<!--        <dt class="popup__info-term"></dt>-->
-<!--        <dd class="popup__info-description"></dd>-->
-<!--      </div>-->
-<!--    </template>-->
+  <div class="popup popup_type_avatar" aria-hidden="true">
+    <div class="popup__content" role="dialog" aria-modal="true" aria-labelledby="avatar-title" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <h2 class="popup__title" id="avatar-title">Обновить аватар</h2>
+      <form class="popup__form" name="edit-avatar" novalidate>
+        <label class="popup__field"><span class="visually-hidden">Ссылка на аватар</span><input class="popup__input popup__input_type_avatar" id="avatar-link" name="avatar" type="url" placeholder="Ссылка на картинку" required><span class="popup__input-error" id="avatar-link-error" aria-live="polite"></span></label>
+        <p class="popup__error" role="alert"></p>
+        <button class="popup__button popup__button_disabled" type="submit" disabled>Сохранить</button>
+      </form>
+    </div>
+  </div>
 
-<!--    <template id="popup-info-user-preview-template">-->
-<!--      <li class="popup__list-item popup__list-item_type_badge"></li>-->
-<!--    </template>-->
-  </body>
+  <div class="popup popup_type_remove-card" aria-hidden="true">
+    <div class="popup__content" role="dialog" aria-modal="true" aria-labelledby="delete-title" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <h2 class="popup__title" id="delete-title">Вы уверены?</h2>
+      <form class="popup__form" name="remove-card" novalidate>
+        <p class="popup__error" role="alert"></p>
+        <button class="popup__button" type="submit">Да</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="popup popup_type_image" aria-hidden="true">
+    <figure class="popup__image-content" role="dialog" aria-modal="true" aria-labelledby="image-caption" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <img class="popup__image" alt="">
+      <figcaption class="popup__caption" id="image-caption"></figcaption>
+    </figure>
+  </div>
+
+  <div class="popup popup_type_info" aria-hidden="true">
+    <div class="popup__content popup__content_type_info" role="dialog" aria-modal="true" aria-labelledby="info-title" tabindex="-1">
+      <button class="popup__close" type="button" aria-label="Закрыть"></button>
+      <h2 class="popup__title" id="info-title">Информация о карточке</h2>
+      <dl class="popup__info-list"></dl>
+      <h3 class="popup__subtitle">Понравилось пользователям</h3>
+      <ul class="popup__users"></ul>
+      <p class="popup__empty" hidden>Пока никто не поставил лайк.</p>
+    </div>
+  </div>
+
+  <template id="card-template">
+    <li class="places__item card">
+      <button class="card__image-button" type="button" aria-label="Открыть фотографию"><img class="card__image" alt="" loading="lazy" decoding="async"></button>
+      <button class="card__control-button card__control-button_type_info" type="button" aria-label="Информация о карточке">i</button>
+      <button class="card__control-button card__control-button_type_delete" type="button" aria-label="Удалить карточку"><svg viewBox="0 0 20 22" aria-hidden="true"><path d="M2 6h16l-1 15H3L2 6Zm-1-4h5V0h8v2h5v3H1V2Z" fill="currentColor"/></svg></button>
+      <div class="card__description">
+        <h2 class="card__title"></h2>
+        <div class="card__like"><button class="card__like-button" type="button" aria-label="Поставить лайк" aria-pressed="false"><svg viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20 3 11C-3 5 5-3 12 5c7-8 15 0 9 6Z"/></svg></button><span class="card__like-count">0</span></div>
+      </div>
+      <p class="card__error" role="alert" hidden></p>
+    </li>
+  </template>
+  <template id="popup-info-definition-template"><div class="popup__definition"><dt class="popup__term"></dt><dd class="popup__definition-value"></dd></div></template>
+  <template id="popup-info-user-preview-template"><li class="popup__user"><img class="popup__user-avatar" alt="" loading="lazy"><div class="popup__user-info"><p class="popup__user-name"></p><p class="popup__user-about"></p></div></li></template>
+  <script type="module" src="/src/scripts/index.js"></script>
+</body>
 </html>

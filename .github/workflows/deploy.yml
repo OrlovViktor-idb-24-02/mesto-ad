@@ -1,0 +1,50 @@
+name: Build and publish Mesto
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PUBLIC_PAGES_TOKEN: ${{ secrets.PUBLIC_PAGES_TOKEN }}
+      PUBLIC_PAGES_REPO: ${{ secrets.PUBLIC_PAGES_REPO }}
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check and build
+        run: |
+          npm run check
+          npm run build:public
+      - name: Save public build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mesto-public-build
+          path: dist
+      - name: Publish to build repository
+        if: ${{ env.PUBLIC_PAGES_TOKEN != '' && env.PUBLIC_PAGES_REPO != '' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.PUBLIC_PAGES_TOKEN }}
+          external_repository: ${{ secrets.PUBLIC_PAGES_REPO }}
+          publish_dir: ./dist
+          publish_branch: main
+          user_name: OrlovViktor-idb-24-02
+          user_email: 242589486+OrlovViktor-idb-24-02@users.noreply.github.com
+          commit_message: 'deploy: update build'
