@@ -29,16 +29,31 @@ export const createCard = (cardData, userId, { onImage, onLike, onDelete, onInfo
   const imageButton = element.querySelector('.card__image-button');
   imageButton.setAttribute('aria-label', `Открыть фотографию: ${cardData.name}`);
   imageButton.addEventListener('click', () => onImage(cardData));
-  element.querySelector('.card__title').textContent = cardData.name;
-  element.querySelector('.card__title').title = cardData.name;
-  element.querySelector('.card__like-button').addEventListener('click', () => onLike(cardData._id, element));
+  const title = element.querySelector('.card__title');
+  title.textContent = cardData.name;
+  title.title = cardData.name;
+  const likeButton = element.querySelector('.card__like-button');
+  likeButton.addEventListener('click', () => {
+    if (likeButton.disabled) return;
+    likeButton.disabled = true;
+    Promise.resolve()
+      .then(() => onLike(cardData._id, element))
+      .finally(() => { likeButton.disabled = false; });
+  });
   const deleteButton = element.querySelector('.card__control-button_type_delete');
   if (cardData.owner._id === userId) {
     deleteButton.addEventListener('click', () => onDelete(cardData._id, element));
   } else {
     deleteButton.remove();
   }
-  element.querySelector('.card__control-button_type_info').addEventListener('click', () => onInfo(cardData._id, element));
+  const infoButton = element.querySelector('.card__control-button_type_info');
+  infoButton.addEventListener('click', () => {
+    if (infoButton.disabled) return;
+    infoButton.disabled = true;
+    Promise.resolve()
+      .then(() => onInfo(cardData._id, element))
+      .finally(() => { infoButton.disabled = false; });
+  });
   updateCardLikes(element, cardData, userId);
   return element;
 };

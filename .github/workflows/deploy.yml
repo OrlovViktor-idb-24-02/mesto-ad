@@ -18,6 +18,8 @@ jobs:
     env:
       PUBLIC_PAGES_TOKEN: ${{ secrets.PUBLIC_PAGES_TOKEN }}
       PUBLIC_PAGES_REPO: ${{ secrets.PUBLIC_PAGES_REPO }}
+      VITE_MESTO_TOKEN: ${{ secrets.MESTO_API_TOKEN }}
+      VITE_MESTO_COHORT: apf-cohort-203
     steps:
       - name: Checkout source repository
         uses: actions/checkout@v4

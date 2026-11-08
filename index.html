@@ -31,24 +31,9 @@
       </section>
       <p class="page__status" role="status" aria-live="polite">Загрузка...</p>
       <button class="page__retry" type="button" hidden>Попробовать ещё раз</button>
-      <button class="page__retry page__connect" type="button" hidden>Подключить Mesto</button>
       <section class="places" aria-label="Фотографии мест"><ul class="places__list"></ul></section>
     </main>
     <footer class="footer"><p class="footer__copyright">© 2026 Mesto Russia</p></footer>
-  </div>
-
-  <div class="popup popup_type_connection" aria-hidden="true">
-    <div class="popup__content" role="dialog" aria-modal="true" aria-labelledby="connection-title" tabindex="-1">
-      <button class="popup__close" type="button" aria-label="Закрыть"></button>
-      <h2 class="popup__title" id="connection-title">Подключить Mesto</h2>
-      <form class="popup__form" name="connection" novalidate>
-        <label class="popup__field"><span class="visually-hidden">Группа</span><input class="popup__input" id="connection-cohort" name="cohort" type="text" placeholder="Идентификатор группы" required pattern="[A-Za-z0-9_-]+" autocomplete="off"><span class="popup__input-error" id="connection-cohort-error" aria-live="polite"></span></label>
-        <label class="popup__field"><span class="visually-hidden">Токен Mesto</span><input class="popup__input" id="connection-token" name="token" type="password" placeholder="Токен Mesto из письма" required autocomplete="off"><span class="popup__input-error" id="connection-token-error" aria-live="polite"></span></label>
-        <p class="popup__connection-note">Данные используются для подключения к учебному серверу и сохраняются только в текущей вкладке.</p>
-        <p class="popup__error" role="alert"></p>
-        <button class="popup__button popup__button_disabled" type="submit" disabled>Подключить</button>
-      </form>
-    </div>
   </div>
 
   <div class="popup popup_type_edit" aria-hidden="true">

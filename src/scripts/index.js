@@ -5,7 +5,7 @@ import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-900.css';
 import '../styles/index.css';
-import { getUserInfo, getCardList, setUserInfo, setUserAvatar, addCard, deleteCard, changeLikeCardStatus, hasApiConfig, getApiCohort, setApiCredentials } from './components/api.js';
+import { getUserInfo, getCardList, setUserInfo, setUserAvatar, addCard, deleteCard, changeLikeCardStatus } from './components/api.js';
 import { createCard, isCardLiked, updateCardLikes, removeCardElement, showCardError } from './components/card.js';
 import { openModalWindow, closeModalWindow, enableModalClosing } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
@@ -27,19 +27,26 @@ const profileAvatar = document.querySelector('.profile__avatar');
 const list = document.querySelector('.places__list');
 const status = document.querySelector('.page__status');
 const retry = document.querySelector('.page__retry');
-const connectButton = document.querySelector('.page__connect');
-const connectPopup = document.querySelector('.popup_type_connection');
-const connectForm = document.forms.connection;
 const editPopup = document.querySelector('.popup_type_edit');
 const avatarPopup = document.querySelector('.popup_type_avatar');
 const newCardPopup = document.querySelector('.popup_type_new-card');
 const deletePopup = document.querySelector('.popup_type_remove-card');
 const imagePopup = document.querySelector('.popup_type_image');
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupCaption = imagePopup.querySelector('.popup__caption');
 const infoPopup = document.querySelector('.popup_type_info');
+const infoList = infoPopup.querySelector('.popup__info-list');
+const infoUsers = infoPopup.querySelector('.popup__users');
+const infoEmpty = infoPopup.querySelector('.popup__empty');
+const profileEditButton = document.querySelector('.profile__edit-button');
+const profileAvatarButton = document.querySelector('.profile__avatar-button');
+const profileAddButton = document.querySelector('.profile__add-button');
+const profileButtons = document.querySelectorAll('.profile button');
 const profileForm = document.forms['edit-profile'];
 const avatarForm = document.forms['edit-avatar'];
 const cardForm = document.forms['new-place'];
 const deleteForm = document.forms['remove-card'];
+const deleteError = deleteForm.querySelector('.popup__error');
 const definitionTemplate = document.querySelector('#popup-info-definition-template');
 const userTemplate = document.querySelector('#popup-info-user-preview-template');
 const cardsById = new Map();
@@ -62,31 +69,26 @@ const renderUser = (user) => {
 };
 
 const handleImageClick = (cardData) => {
-  const image = imagePopup.querySelector('.popup__image');
-  image.src = cardData.link;
-  image.alt = cardData.name;
-  imagePopup.querySelector('.popup__caption').textContent = cardData.name;
+  popupImage.src = cardData.link;
+  popupImage.alt = cardData.name;
+  popupCaption.textContent = cardData.name;
   openModalWindow(imagePopup);
 };
 
 const handleLikeClick = (cardId, element) => {
-  const button = element.querySelector('.card__like-button');
-  if (button.disabled) return;
-  button.disabled = true;
   showCardError(element, '');
-  changeLikeCardStatus(cardId, isCardLiked(cardsById.get(cardId), currentUser._id))
+  return changeLikeCardStatus(cardId, isCardLiked(cardsById.get(cardId), currentUser._id))
     .then((cardData) => {
       cardsById.set(cardId, cardData);
       updateCardLikes(element, cardData, currentUser._id);
     })
-    .catch((error) => showCardError(element, reportError(error)))
-    .finally(() => { button.disabled = false; });
+    .catch((error) => showCardError(element, reportError(error)));
 };
 
 const handleDeleteClick = (cardId, element) => {
   if (deleteForm.dataset.submitting === 'true') return;
   pendingDelete = { cardId, element };
-  deleteForm.querySelector('.popup__error').textContent = '';
+  deleteError.textContent = '';
   openModalWindow(deletePopup);
 };
 
@@ -110,33 +112,33 @@ const createUserPreview = (user) => {
 };
 
 const handleInfoClick = (cardId, element) => {
-  const button = element.querySelector('.card__control-button_type_info');
-  if (button.disabled) return;
-  button.disabled = true;
   const requestId = ++infoRequestId;
   showCardError(element, '');
+  infoList.textContent = 'Загрузка...';
+  infoUsers.replaceChildren();
+  infoEmpty.hidden = true;
+  openModalWindow(infoPopup);
   // Для статистики каждый раз запрашиваем актуальные сведения с сервера.
-  getCardList()
+  return getCardList()
     .then((cards) => {
-      if (requestId !== infoRequestId || !element.isConnected) return;
+      if (requestId !== infoRequestId || !element.isConnected || !infoPopup.classList.contains('popup_is-opened')) return;
       const cardData = cards.find((card) => card._id === cardId);
       if (!cardData) throw new Error('Карточка больше не существует.');
-      cardsById.set(cardId, cardData);
-      updateCardLikes(element, cardData, currentUser._id);
-      infoPopup.querySelector('.popup__info-list').replaceChildren(
+      infoList.replaceChildren(
         createInfoString('Название:', cardData.name),
         createInfoString('Автор:', cardData.owner.name),
         createInfoString('Дата создания:', formatDate(new Date(cardData.createdAt))),
         createInfoString('Количество лайков:', cardData.likes.length),
       );
-      infoPopup.querySelector('.popup__users').replaceChildren(...cardData.likes.map(createUserPreview));
-      infoPopup.querySelector('.popup__empty').hidden = cardData.likes.length > 0;
-      openModalWindow(infoPopup);
+      infoUsers.replaceChildren(...cardData.likes.map(createUserPreview));
+      infoEmpty.hidden = cardData.likes.length > 0;
     })
     .catch((error) => {
-      if (requestId === infoRequestId) showCardError(element, reportError(error));
-    })
-    .finally(() => { button.disabled = false; });
+      if (requestId === infoRequestId) {
+        closeModalWindow(infoPopup);
+        showCardError(element, reportError(error));
+      }
+    });
 };
 
 const renderCard = (cardData) => {
@@ -210,7 +212,7 @@ deleteForm.addEventListener('submit', (event) => {
   }));
 });
 
-document.querySelector('.profile__edit-button').addEventListener('click', () => {
+profileEditButton.addEventListener('click', () => {
   if (profileForm.dataset.submitting === 'true') return;
   profileForm.elements.name.value = currentUser.name;
   profileForm.elements.about.value = currentUser.about;
@@ -218,14 +220,14 @@ document.querySelector('.profile__edit-button').addEventListener('click', () => 
   openModalWindow(editPopup);
 });
 
-document.querySelector('.profile__avatar-button').addEventListener('click', () => {
+profileAvatarButton.addEventListener('click', () => {
   if (avatarForm.dataset.submitting === 'true') return;
   avatarForm.reset();
   clearValidation(avatarForm, validationSettings);
   openModalWindow(avatarPopup);
 });
 
-document.querySelector('.profile__add-button').addEventListener('click', () => {
+profileAddButton.addEventListener('click', () => {
   if (cardForm.dataset.submitting === 'true') return;
   cardForm.reset();
   clearValidation(cardForm, validationSettings);
@@ -243,42 +245,18 @@ const loadPage = () => {
       renderUser(user);
       cardsById.clear();
       list.replaceChildren(...cards.map(renderCard));
-      document.querySelectorAll('.profile button').forEach((button) => { button.disabled = false; });
+      profileButtons.forEach((button) => { button.disabled = false; });
       status.textContent = cards.length ? '' : 'Пока нет фотографий. Добавьте первое место.';
       status.hidden = cards.length > 0;
-      connectButton.hidden = true;
     })
     .catch((error) => {
       status.textContent = reportError(error);
       retry.hidden = false;
-      connectButton.hidden = false;
     })
     .finally(() => { loading = false; });
 };
 
 retry.addEventListener('click', loadPage);
-connectButton.addEventListener('click', () => {
-  connectForm.elements.cohort.value = getApiCohort();
-  connectForm.elements.token.value = '';
-  clearValidation(connectForm, validationSettings);
-  openModalWindow(connectPopup);
-});
-connectForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  if (!connectForm.checkValidity() || loading) return;
-  setApiCredentials({
-    cohort: connectForm.elements.cohort.value,
-    token: connectForm.elements.token.value,
-  });
-  connectForm.reset();
-  closeModalWindow(connectPopup);
-  loadPage();
-});
 enableValidation(validationSettings);
 enableModalClosing();
-if (hasApiConfig()) {
-  loadPage();
-} else {
-  status.textContent = 'Подключите свой аккаунт Mesto, чтобы увидеть профиль и фотографии.';
-  connectButton.hidden = false;
-}
+loadPage();

@@ -1,34 +1,13 @@
-const readSavedCredentials = () => {
-  try {
-    return JSON.parse(sessionStorage.getItem('mesto-connection')) || {};
-  } catch {
-    return {};
-  }
-};
-
-const saved = readSavedCredentials();
-let cohort = saved.cohort || import.meta.env.VITE_MESTO_COHORT || '';
+const cohort = import.meta.env.VITE_MESTO_COHORT || '';
 const config = {
   baseUrl: `https://mesto.nomoreparties.co/v1/${encodeURIComponent(cohort)}`,
   headers: {
-    authorization: saved.token || import.meta.env.VITE_MESTO_TOKEN || '',
+    authorization: import.meta.env.VITE_MESTO_TOKEN || '',
     'Content-Type': 'application/json',
   },
 };
 
-export const hasApiConfig = () => Boolean(config.headers.authorization && cohort);
-export const getApiCohort = () => cohort;
-export const setApiCredentials = (credentials) => {
-  cohort = credentials.cohort.trim();
-  const token = credentials.token.trim();
-  config.baseUrl = `https://mesto.nomoreparties.co/v1/${encodeURIComponent(cohort)}`;
-  config.headers.authorization = token;
-  try {
-    sessionStorage.setItem('mesto-connection', JSON.stringify({ cohort, token }));
-  } catch {
-    // Если хранилище отключено, соединение действует до обновления страницы.
-  }
-};
+const hasApiConfig = () => Boolean(config.headers.authorization && cohort);
 
 export const getResponseData = (res) =>
   res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}`));

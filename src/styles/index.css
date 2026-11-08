@@ -70,7 +70,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid #73c8ff; outline-offs
 .popup__input-error { position: absolute; top: 38px; left: 0; width: 100%; color: #f00; font-size: 12px; line-height: 14px; }
 .popup__error { margin: 0; color: #c93030; font-size: 12px; line-height: 16px; }
 .popup__error:not(:empty) { margin: 15px 0; }
-.popup__connection-note { margin: 8px 0; color: #666; font-size: 12px; line-height: 17px; }
 .popup__button { width: 100%; min-height: 50px; margin-top: 16px; padding: 12px 8px; border: 1px solid #000; border-radius: 2px; color: #fff; background: #000; font-size: 18px; line-height: 22px; }
 .popup__button:disabled { color: rgb(0 0 0 / 20%); border-color: rgb(0 0 0 / 20%); background: #fff; }
 .popup_type_remove-card .popup__title { margin-bottom: 22px; }
