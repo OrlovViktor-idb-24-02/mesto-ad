@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:public": "vite build --mode public",
     "preview": "vite preview --host 127.0.0.1",
+    "check:api": "node scripts/check-api.mjs",
     "check": "node --check src/scripts/index.js && node --check src/scripts/components/api.js && node --check src/scripts/components/card.js && node --check src/scripts/components/modal.js && node --check src/scripts/components/validation.js",
     "deploy": "npm run build:public && gh-pages -d dist -r https://github.com/OrlovViktor-idb-24-02/mesto-pages.git -b main"
   },

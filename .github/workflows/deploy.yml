@@ -39,6 +39,9 @@ jobs:
         with:
           name: mesto-public-build
           path: dist
+      - name: Check live API availability (read only)
+        continue-on-error: true
+        run: npm run check:api
       - name: Publish to build repository
         if: ${{ env.PUBLIC_PAGES_TOKEN != '' && env.PUBLIC_PAGES_REPO != '' }}
         uses: peaceiris/actions-gh-pages@v3
