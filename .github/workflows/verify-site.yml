@@ -1,0 +1,26 @@
+name: Verify published Mesto
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser test tool
+        run: npm install --no-save --package-lock=false playwright@1.65.0
+      - name: Check public site with real API (read only)
+        run: node scripts/check-published.mjs
+      - name: Save screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-site-checks
+          path: site-checks
