@@ -1,21 +1,15 @@
-const cohort = import.meta.env.VITE_MESTO_COHORT || '';
 const config = {
-  baseUrl: `https://mesto.nomoreparties.co/v1/${encodeURIComponent(cohort)}`,
+  baseUrl: 'https://mesto.nomoreparties.co/v1/apf-cohort-203',
   headers: {
-    authorization: import.meta.env.VITE_MESTO_TOKEN || '',
+    authorization: "42558611-24e8-4f37-b78f-f4638e558c21",
     'Content-Type': 'application/json',
   },
 };
-
-const hasApiConfig = () => Boolean(config.headers.authorization && cohort);
 
 export const getResponseData = (res) =>
   res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}`));
 
 const request = (endpoint, options = {}) => {
-  if (!hasApiConfig()) {
-    return Promise.reject(new Error('Не настроено подключение к серверу Mesto.'));
-  }
   return fetch(`${config.baseUrl}${endpoint}`, {
     ...options,
     headers: config.headers,

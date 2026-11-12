@@ -7,7 +7,7 @@ import '@fontsource/inter/latin-900.css';
 import '../styles/index.css';
 import { getUserInfo, getCardList, setUserInfo, setUserAvatar, addCard, deleteCard, changeLikeCardStatus } from './components/api.js';
 import { createCard, isCardLiked, updateCardLikes, removeCardElement, showCardError } from './components/card.js';
-import { openModalWindow, closeModalWindow, enableModalClosing } from './components/modal.js';
+import { openModalWindow, closeModalWindow, setCloseModalWindowEventListeners } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
 
 const validationSettings = {
@@ -153,24 +153,18 @@ const renderCard = (cardData) => {
 
 // Значение фиксируется до отправки, поля не сбрасываются при ошибке.
 const submitForm = (form, popup, loadingText, action) => {
-  if (form.dataset.submitting === 'true' || !form.checkValidity()) return;
+  if (form.dataset.submitting === 'true') return;
   const button = form.querySelector('[type="submit"]');
   const defaultText = button.textContent;
   form.dataset.submitting = 'true';
   form.querySelector('.popup__error').textContent = '';
   button.textContent = loadingText;
-  button.disabled = true;
-  button.classList.add(validationSettings.inactiveButtonClass);
-  form.querySelectorAll('input').forEach((input) => { input.disabled = true; });
   Promise.resolve().then(action)
     .then(() => closeModalWindow(popup))
     .catch((error) => { form.querySelector('.popup__error').textContent = reportError(error); })
     .finally(() => {
       form.dataset.submitting = 'false';
-      form.querySelectorAll('input').forEach((input) => { input.disabled = false; });
       button.textContent = defaultText;
-      button.disabled = !form.checkValidity();
-      button.classList.toggle(validationSettings.inactiveButtonClass, button.disabled);
     });
 };
 
@@ -258,5 +252,5 @@ const loadPage = () => {
 
 retry.addEventListener('click', loadPage);
 enableValidation(validationSettings);
-enableModalClosing();
+document.querySelectorAll('.popup').forEach(setCloseModalWindowEventListeners);
 loadPage();

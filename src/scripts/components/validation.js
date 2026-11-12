@@ -1,5 +1,3 @@
-const originalValues = new WeakMap();
-
 const getErrorElement = (form, input, settings) =>
   form.querySelector(`${settings.errorSelector}[id="${input.id}-error"]`);
 
@@ -19,21 +17,7 @@ const hideInputError = (form, input, settings) => {
   errorElement.classList.remove(settings.errorClass);
 };
 
-const setCustomValidity = (input) => {
-  input.setCustomValidity('');
-  if (input.value && input.value.trim().length === 0) {
-    input.setCustomValidity('Введите текст.');
-  } else if (input.validity.patternMismatch) {
-    input.setCustomValidity(input.dataset.errorMessage || input.validationMessage);
-  } else if (input.type === 'url' && input.value && !/^https?:\/\//i.test(input.value)) {
-    input.setCustomValidity('Введите ссылку, начинающуюся с http:// или https://.');
-  } else if (input.minLength > 0 && input.value && input.value.trim().length < input.minLength) {
-    input.setCustomValidity(`Введите не менее ${input.minLength} символов.`);
-  }
-};
-
 const checkInputValidity = (form, input, settings) => {
-  setCustomValidity(input);
   if (input.validity.valid) hideInputError(form, input, settings);
   else showInputError(form, input, input.validationMessage, settings);
 };
@@ -52,10 +36,7 @@ const enableSubmitButton = (button, settings) => {
 
 const toggleButtonState = (form, inputs, settings) => {
   const button = form.querySelector(settings.submitButtonSelector);
-  const unchanged = form.dataset.requireChanges === 'true'
-    && originalValues.has(form)
-    && inputs.every((input, index) => input.value.trim() === originalValues.get(form)[index]);
-  if (form.dataset.submitting === 'true' || hasInvalidInput(inputs) || unchanged) {
+  if (hasInvalidInput(inputs)) {
     disableSubmitButton(button, settings);
   } else {
     enableSubmitButton(button, settings);
@@ -77,9 +58,7 @@ const setEventListeners = (form, settings) => {
 
 export const clearValidation = (form, settings) => {
   const inputs = Array.from(form.querySelectorAll(settings.inputSelector));
-  originalValues.set(form, inputs.map((input) => input.value.trim()));
   inputs.forEach((input) => {
-    input.setCustomValidity('');
     hideInputError(form, input, settings);
   });
   form.querySelector(settings.serverErrorSelector).textContent = '';
