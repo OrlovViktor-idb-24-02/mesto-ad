@@ -15,8 +15,9 @@ try {
   assert.ok(await page.getByRole('button',{name:'Редактировать профиль',exact:true}).isEnabled());
   await page.screenshot({path:`${output}/desktop.png`,fullPage:false});
   await page.locator('.card__image-button').first().click();
-  assert.ok(await page.locator('.popup_type_image').isVisible());
+  await page.locator('.popup_type_image').waitFor({state:'visible'});
   await page.keyboard.press('Escape');
+  await page.locator('.popup_type_image').waitFor({state:'hidden'});
   await page.locator('.card__control-button_type_info').first().click();
   await page.waitForFunction(() => document.querySelector('.popup__info-list')?.textContent.includes('Дата создания:'),{},{timeout:30000});
   assert.ok(await page.locator('.popup_type_info').isVisible());
